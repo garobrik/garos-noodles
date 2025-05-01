@@ -42,9 +42,7 @@ jobs:
       - name: lint
         run: npm run lint
       - name: build
-        env: 
-          VITE_CONFIG: "{base:'/garos-noodles/'}"
-        run: npm run build
+        run: VITE_CONFIG="{base:'/garos-noodles/'}" npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -19,5 +19,6 @@ export function Link({ href, className, children }: Props) {
     </a>
   );
 }
+
 const normalize = (url: string) =>
   '/' + url.split('/').filter(Boolean).join('/');

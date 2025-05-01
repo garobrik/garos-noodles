@@ -1,4 +1,5 @@
 {
+  "name": "garos-noodles",
   "scripts": {
     "dev": "vike dev",
     "build": "vike build",
@@ -19,7 +20,6 @@
     "@types/node": "^22.13.8",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "daisyui": "^5.0.12",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",

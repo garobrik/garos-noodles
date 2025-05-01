@@ -2,7 +2,7 @@
 
 import eslint from '@eslint/js';
 import prettier from 'eslint-plugin-prettier/recommended';
-import react from 'eslint-plugin-react/configs/recommended.js';
+import react from 'eslint-plugin-react/configs/jsx-runtime.js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -63,9 +63,9 @@ export default tseslint.config(
   prettier,
   {
     rules: {
-      'prettier/prettier': {
+      'prettier/prettier': ['error', {
         singleQuote: true,
-      },
+      }],
     },
   }
 );

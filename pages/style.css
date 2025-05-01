@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: oklch(98% 0.005 60);
+  --color-on-bg: oklch(18% 0.1 115);
+  --color-accent: oklch(56% 0.05 154);
+}
+
+@layer theme {
+  :root {
+    @media (prefers-color-scheme: dark) {
+      --color-bg: oklch(15% 0.05 90);
+      --color-on-bg: oklch(98% 0.005 60);
+      --color-accent: oklch(56% 0.1 120);
+    }
+  }
+}
+
+@layer base {
+  html {
+    @apply font-sans text-on-bg bg-bg;
+  }
+
+  h1 {
+    @apply text-3xl mt-8 mb-4;
+  }
+
+  h2 {
+    @apply text-2xl mt-8 mb-4;
+  }
+
+
+  main {
+
+    p,
+    ul {
+      @apply mb-3;
+    }
+
+    ul {
+      @apply list-disc pl-6;
+
+      ul {
+        @apply pl-4;
+      }
+    }
+
+    a {
+      @apply underline;
+    }
+  }
+}

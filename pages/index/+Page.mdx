@@ -1,19 +1,12 @@
 import fs from 'fs';
-import {Link} from '../../components/Link';
-
-export const blogPosts = fs
-  .readdirSync('./pages/blog/', { withFileTypes: true })
-  .filter((file) => file.isDirectory());
-export const blogPostImports = await Promise.all(
-  blogPosts.map(async (post) => await import(`../blog/${post.name}/+Page.mdx`))
-);
+import { Noodles } from '../../components/Noodles';
 
 # hi there!
 
-my name's garo and i use <Link href="/they">they/them pronouns</Link>
+my name's garo and these are my noodles. i tend to them with care, while aspiring to garden in meat-space (plant-space?)
 
-welcome to my experiment with having a personal website! 
+you can read more about me and about this website [here](/about).
 
-i feel impressed by and grateful for the effort people put into sharing their thoughts and selves with the world, so here's my attempt at the same
+# noodles
 
-you can hope for content about software, music, and civic technology, but we'll see!
+<Noodles />

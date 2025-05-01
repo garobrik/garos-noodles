@@ -1,20 +1,19 @@
-import React from "react";
-import { usePageContext } from "vike-react/usePageContext";
+import React from 'react';
+import { usePageContext } from 'vike-react/usePageContext';
 
 export default function Page() {
   const { is404 } = usePageContext();
   if (is404) {
     return (
-      <>
-        <h1>404 Page Not Found</h1>
-        <p>This page could not be found.</p>
-      </>
+      <div className="flex flex-col items-center">
+        <h1>couldn't find that noodle!</h1>
+        <p>must've slipped away</p>
+      </div>
     );
   }
   return (
     <>
-      <h1>500 Internal Server Error</h1>
-      <p>Something went wrong.</p>
+      <h1>error</h1>
     </>
   );
 }

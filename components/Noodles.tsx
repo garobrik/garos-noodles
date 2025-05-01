@@ -1,4 +1,5 @@
 import { getGlobalContextSync } from 'vike/server';
+import { Link } from './Link';
 
 type Noodle = {
   frontmatter: {
@@ -24,9 +25,9 @@ const noodles = await Promise.all(
 
 export const Noodles = () => {
   return noodles.map(({ noodle, page: { route } }) => (
-    <a key={route as string} className="no-underline" href={route as string}>
+    <Link key={route as string} className="no-underline" href={route as string}>
       <h3 className="underline">{noodle.title}</h3>
       <p>{noodle.description}</p>
-    </a>
+    </Link>
   ));
 };

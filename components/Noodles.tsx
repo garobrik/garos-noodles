@@ -1,11 +1,14 @@
 import { getGlobalContextSync } from 'vike/server';
 import { Link } from './Link';
 
-type Noodle = {
-  frontmatter: {
-    title: string;
-    description: string;
-  };
+export type Noodle = {
+  title?: string;
+  description?: string;
+  draft?: boolean;
+};
+
+type NoodleFrontmatter = {
+  frontmatter: Noodle;
 };
 
 const pages = getGlobalContextSync().pages;
@@ -17,17 +20,24 @@ const noodles = await Promise.all(
     noodle: (
       (await import(
         `../pages/(noodle)/${path.replace('/pages/(noodle)/', '')}/+Page.mdx`
-      )) as Noodle
+      )) as NoodleFrontmatter
     ).frontmatter,
     page,
   })),
 );
 
 export const Noodles = () => {
-  return noodles.map(({ noodle, page: { route } }) => (
-    <Link key={route as string} className="no-underline" href={route as string}>
-      <h3 className="underline">{noodle.title}</h3>
-      <p>{noodle.description}</p>
-    </Link>
-  ));
+  return noodles.map(
+    ({ noodle, page: { route } }) =>
+      !noodle.draft && (
+        <Link
+          key={route as string}
+          className="no-underline"
+          href={route as string}
+        >
+          <h3 className="underline">{noodle.title}</h3>
+          <p>{noodle.description}</p>
+        </Link>
+      ),
+  );
 };

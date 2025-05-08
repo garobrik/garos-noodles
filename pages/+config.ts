@@ -1,5 +1,6 @@
 import vikeReact from 'vike-react/config';
 import type { Config } from 'vike/types';
+import { Noodle } from '../components/Noodles';
 
 export default {
   extends: vikeReact,
@@ -17,10 +18,7 @@ export default {
 declare global {
   namespace Vike {
     interface Config {
-      frontmatter?: {
-        title?: string;
-        description?: string;
-      };
+      frontmatter?: Noodle;
     }
   }
 }

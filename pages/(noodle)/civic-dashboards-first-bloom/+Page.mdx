@@ -1,26 +1,47 @@
 ---
 title: civic dashboard's first bloom!
 description: reflections on 6 months of unstructured volunteer open source civic tech co-creation
+draft: true
 ---
 
-import {Image} from '../../../components/Image';
+import limes from './limes.jpg';
+import councillorsDark from './councillors-dark.png';
+import councilDark from './council-dark.png';
+import actionsDark from './actions-dark.png';
+import splashDark from './splash-dark.png';
+import councillorsLight from './councillors-light.png';
+import councilLight from './council-light.png';
+import actionsLight from './actions-light.png';
+import splashLight from './splash-light.png';
 
 # Civic Dashboard's first bloom!
 
 i've been contributing to [Civic Dashboard](https://civicdashboard.ca), a volunteer community effort to make the City of Toronto's municipal government easier to understand and participate in. that's pretty broad! we're still trying to figure out what's most needed. but here's some screenshots of our website to give an idea of what we've done so far:
 
-<Image src="/TODO" alt="image TODO" />
+<div className="hidden dark:flex gap-x-4 w-full flex-wrap [&>*]:w-[calc(50%-0.5rem)] sm:[&>*]:flex-1">
+  <img src={splashDark} alt="Civic Dashboard's splash screen" />
+  <img src={actionsDark} alt="Civic Dashboard's Actions screen" />
+  <img src={councilDark} alt="Civic Dashboard's How Council Works screen" />
+  <img src={councillorsDark} alt="Civic Dashboard's Councillors screen" />
+</div>
+<div className="flex dark:hidden gap-x-4 w-full flex-wrap [&>*]:w-[calc(50%-0.5rem)] sm:[&>*]:flex-1">
+  <img src={splashLight} alt="Civic Dashboard's splash screen" />
+  <img src={actionsLight} alt="Civic Dashboard's Actions screen" />
+  <img src={councilLight} alt="Civic Dashboard's How Council Works screen" />
+  <img src={councillorsLight} alt="Civic Dashboard's Councillors screen" />
+</div>
+  
 
 we recently reached a milestone we've named Enthusiastically Shareable, so i'm sharing it here. enthusiastically! there's still a lot of rough edges, especially when it comes to explaining what the thing actually is, but like, look, we did a cool thing! 
 
 i'm going to explain what we've done, and what i've learned in the process.
 ## what are we doing here?
 
-and who even is we! civic dashboard emerged from the primordial goop of democratic frustration when [ilya](TODO) gave a talk explaining why our existing tools are old & busted, and a surprising number of people said "where can i sign up to build the new hotness". 
+and who even is we! civic dashboard emerged from the primordial goop of democratic frustration when our resident Big Talker gave a talk explaining why our existing tools are old & busted, and a surprising number of people said "where can i sign up to build the new hotness". 
 
 most of its contributors found out about it through the wonderful Civic Tech Toronto group and its weekly gathering. imagine a big group of nerds of all stripes getting together in-person and on zoom to jam about how to make their city better. you lucky duck Toronto!
 
-at least 50 people have contributed to Civic Dashboard via code, design, research, writing, organizing, giving feedback, and more. folks kept showing up, and who wants to say no to an enthusiastic volunteer? we've started trying to capture this mess for posterity in our [work log](TODO).
+at least 50 people have contributed to Civic Dashboard via code, design, research, writing, organizing, giving feedback, and more. folks kept showing up, and who wants to say no to an enthusiastic volunteer? we started capturing this mess for posterity in our [Who Got Us Here](https://steadyhq.com/en/civic-dashboard/posts/a6a618ee-cb1d-496c-965c-64cb91a211fd) post, but we're going to turn that into a regularly updated work log.
 
 but we realized that with so many voices in the room, and everyone excited about building different things, we were never going to be able to come to a consensus about what to put in an initial release.
 
@@ -40,7 +61,7 @@ working on Civic Dashboard has definitely been helping me understand what he's t
 
 in a funded environment, there are *so* many factors that can make collaboration and community building the wrong tool. if the project has to pay every contributor a full-time, eye-popping tech industry salary, you'd better be squeezing every last bit of juice out of every last little lime. and if you're contributing to something your livelihood depends on, it gets pretty hard to engage in a boundaried way.
 
-<Image src="/civic-dashboard/limes.jpg" alt="a human holding far too many limes" className="max-w-50" />
+<img src={limes} alt="a human holding far too many limes" className="max-w-50" />
 
 but to be nakedly sunshine and rainbows about it, if you're all here to make friends, learn, and do something you love, things are better! people contribute to what they feel motivated and capable of doing: fulfilling as heck. when you want to take a break, you take a break: begone, burnout. if something flops, someone learned and grew, and nothing is lost: experimental abundance. there's a huge number of brains percolating on the project: oodles of ideas.
 

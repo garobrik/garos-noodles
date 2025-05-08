@@ -48,5 +48,9 @@
     a {
       @apply underline;
     }
+
+    img {
+      @apply mx-auto pb-4;
+    }
   }
 }

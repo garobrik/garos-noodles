@@ -6,9 +6,9 @@ type Props = {
   className: string;
 };
 export const Image = ({ src, className, alt }: Props) => {
-  if (src.startsWith('/')) {
-    src = import.meta.env.BASE_URL + src.replace('/', '');
-  }
+  // if (src.startsWith('/')) {
+  //   src = import.meta.env.BASE_URL + src.replace('/', '');
+  // }
   src = normalize(src);
   return (
     <img src={src} alt={alt} className={clsx('mx-auto pb-4', className)} />

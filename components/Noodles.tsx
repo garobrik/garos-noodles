@@ -8,7 +8,7 @@ export type Noodle = {
 };
 
 type NoodleFrontmatter = {
-  frontmatter: Noodle;
+  frontmatter?: Noodle;
 };
 
 const pages = getGlobalContextSync().pages;
@@ -29,6 +29,7 @@ const noodles = await Promise.all(
 export const Noodles = () => {
   return noodles.map(
     ({ noodle, page: { route } }) =>
+      noodle &&
       !noodle.draft && (
         <Link
           key={route as string}

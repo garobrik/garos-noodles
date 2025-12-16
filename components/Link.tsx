@@ -4,7 +4,7 @@ import React from 'react';
 
 type Props = React.PropsWithChildren<{
   href: string;
-  className: string;
+  className?: string;
 }>;
 export function Link({ href, className, children }: Props) {
   const pageContext = usePageContext();

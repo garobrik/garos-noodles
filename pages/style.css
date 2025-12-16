@@ -22,26 +22,36 @@
   }
 
   h1 {
-    @apply text-3xl mt-8 mb-4;
+    @apply text-xl mt-8 mb-4;
   }
 
   h2 {
-    @apply text-2xl mt-8 mb-4;
+    @apply text-xl mt-8 mb-4;
   }
 
-
   main {
-
     p,
     ul {
       @apply mb-3;
     }
 
     ul {
-      @apply list-disc pl-6;
+      @apply list-disc ps-6;
 
       ul {
-        @apply pl-4;
+        @apply ps-4;
+      }
+    }
+
+    blockquote {
+      @apply border-s-3 ps-2;
+
+      & + ul {
+        @apply list-none ps-2;
+        li:before {
+          content: '-';
+          @apply pe-2;
+        }
       }
     }
 
@@ -52,5 +62,13 @@
     img {
       @apply mx-auto pb-4;
     }
+  }
+}
+
+.space-between-wrap {
+  @apply flex flex-wrap items-baseline justify-between gap-x-12;
+
+  :last-child {
+    @apply ms-auto;
   }
 }

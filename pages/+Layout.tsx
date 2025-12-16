@@ -4,11 +4,11 @@ import './style.css';
 export default function LayoutDefault({ children }: React.PropsWithChildren) {
   return (
     <div className="m-auto max-w-[50rem] px-4">
-      <nav className="flex flex-wrap items-baseline justify-between gap-x-12 py-4">
+      <nav className="space-between-wrap py-4">
         <Link href="/" className="text-2xl sm:text-4xl font-semibold">
           garo's noodle garden
         </Link>
-        <Link href="/about" className="ml-auto text-lg font-semibold">
+        <Link href="/about" className="text-lg font-semibold">
           about
         </Link>
       </nav>

@@ -1,0 +1,41 @@
+---
+kind: thought
+added: 2026/03/16
+publish: unlisted
+title: "Co-operative Computing: Let's Break it Down"
+---
+here's a true thing about computers: practically speaking, someone who makes an app that can *do* anything a computer can do on its own (read things! write things! make music! play games! make games!) can distribute that app to the entire world instantly, for free, forever, no matter how many users they have.
+
+here's another true thing: practically speaking, as soon as that app maker wants the app data to be conveniently available on *more than one computer*, they or their users become responsible for operating server infrastructure and taking responsibility for safely mediating all their users' communication forever, and it will get more expensive the more users they have.
+
+this essay is both an explainer and a future direction for how we collaborate using computers (just trying to keep the scope manageable). the audience is intended to be general! you shouldn't need to understand anything about computers to read this, although if you don't care about how the structure of our computer networks empowers or disempowers real people, then it might turn into a bit of a snoozer. this is a work in progress: let me know if anything is difficult to understand, or if i've made any errors or omissions.
+
+there's a lot of assumptions baked into phrases like "conveniently available" and "safely mediating", and it can be pretty hard for a programmer to wrap their head around exactly why this is all such a drag, let alone someone who doesn't in the first place have much of a sense of what's going on in their computer.
+## so let's break it down!
+by convenient, do we mean we can choose to send our stuff instantly to any computer in the world? or that our stuff will automagically simultaneously be synchronized between computers all over the world? it feels pretty hard to give up the workflow that google docs brought to the masses. can we look at our stuff when we don't have internet? can we see previous versions of our stuff? can we search through all our stuff? does our stuff take up tons of space on our computers? can i let people read my stuff but not change it? can i let people add to my stuff, but not read it? and how much does all this cost? who is paying for it?
+
+by safely, do we mean that random people on the internet cannot see our stuff? ad agencies can't see our stuff? the NSA can't see our stuff? *only* computers owned by us and our collaborators (and not the people who made the app) can see our stuff? and what do we even mean by "cannot see our stuff"? how much convenience are we willing to give up for that safety? can we lose access to our stuff? will the app disappear?
+
+the temptation (for someone like me, anyway) is to get frustrated with a piece of software and the choices it has made, and wonder why someone hasn't made the right choices yet! aren't the right choices obvious? we haven't even started talking about what the heck we're doing with the actual app yet! the UI, the features, how it organizes our stuff, more choices! there are more possible apps than stars in the observable universe, and lately i've been thinking that part of what prevents software from being `INSERT_POINT_OF_FRUSTRATION_HERE` is this explosion of complexity. in order to make a co-operative software, i have to take a stance on *all* of these questions.
+## so let's break it down!
+what i'm imagining, at the highest level, is that when you use an app, it asks you *where* you want to store your stuff, and it leaves it up to you how you want to make *all* those decisions about safely and conveniently storing your data.
+
+## old/rough
+
+as a software user, i want the changes i make to my data to be visible as fast as possible to both myself and my intended audience, but no one else. and i want to be able to rely on that data to still be there years or even decades into the future. as a software developer, i want to take on as little operational burden as possible.
+
+currently, there are two major paradigms: 
+1. software stores data on my computer, but it's cumbersome to share it to my intended audience.
+2. software stores data on a computer that lives in a warehouse far away, and the software developer has to manage that infrastructure.
+
+i am imagining something that provides the best of both worlds: a protocol for software written by *other* people to store data on *my* devices, which synchronizes it to other devices according to *my* preferences. 
+
+those preferences could look very different for different people: some people want to just pay someone money to store their data somewhere privately, and the protocol should support this. some people want someone to store their data for free, even if it might not be private, and the protocol should support this. some people want the data to only live on their own computers, and the protocol should support this. the protocol should support any mixture of the above!
+
+rather than making another piece of software which further empowers software creators to more easily take on that operational burden, or which empowers their users to instead take on that operational burden, could we instead disseminate a solution which allows developers to treat the entire data and synchronization layer as an abstraction?
+
+what would such a layer need to take responsibility for? it would need to be able to:
+- establish connections between computers
+- store and consistently synchronize information between those computers
+- ensure that the correct information is shared with the correct computers
+- provide a method for doing the above which is *flexible* enough that it doesn't constrain what type of application can be built on it, yet *powerful* enough that actually useful and performant applications can be built on top of it

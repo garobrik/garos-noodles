@@ -4,24 +4,168 @@ added: 2026/03/16
 publish: unlisted
 title: "Co-operative Computing: Let's Break it Down"
 ---
-here's a true thing about computers: practically speaking, someone who makes an app that can *do* anything a computer can do on its own (read things! write things! make music! play games! make games!) can distribute that app to the entire world instantly, for free, forever, no matter how many users they have.
+here's a true thing about computers: practically speaking, someone who makes an app that can *do* anything a computer can do on its own (read things! write things! make music! play games! make games!) can distribute that app to the entire world instantly, for free, forever, no matter how many people use the app.
 
-here's another true thing: practically speaking, as soon as that app maker wants the app data to be conveniently available on *more than one computer*, they or their users become responsible for operating server infrastructure and taking responsibility for safely mediating all their users' communication forever, and it will get more expensive the more users they have.
+here's another true thing: practically speaking, as soon as that app maker wants the app's data to be conveniently available on *more than one computer*, they or the app's users become responsible for operating server infrastructure and taking responsibility for safely mediating all the users' communication forever, and it will get more expensive the more users there are.
 
-this essay is both an explainer and a future direction for how we collaborate using computers (just trying to keep the scope manageable). the audience is intended to be general! you shouldn't need to understand anything about computers to read this, although if you don't care about how the structure of our computer networks empowers or disempowers real people, then it might turn into a bit of a snoozer. this is a work in progress: let me know if anything is difficult to understand, or if i've made any errors or omissions.
+[insert example?]
 
-there's a lot of assumptions baked into phrases like "conveniently available" and "safely mediating", and it can be pretty hard for a programmer to wrap their head around exactly why this is all such a drag, let alone someone who doesn't in the first place have much of a sense of what's going on in their computer.
-## so let's break it down!
-by convenient, do we mean we can choose to send our stuff instantly to any computer in the world? or that our stuff will automagically simultaneously be synchronized between computers all over the world? it feels pretty hard to give up the workflow that google docs brought to the masses. can we look at our stuff when we don't have internet? can we see previous versions of our stuff? can we search through all our stuff? does our stuff take up tons of space on our computers? can i let people read my stuff but not change it? can i let people add to my stuff, but not read it? and how much does all this cost? who is paying for it?
+this essay is both an explainer and a future direction for how we co-operate using computers (just trying to keep the scope manageable). the audience is intended to be general! you shouldn't need to *understand* anything about computers to read this, although if you don't *care* about how apps and computers talk to each other it'll be a bit of a snoozer. this is a work in progress: let me know if anything is difficult to understand, or if i've made any errors or omissions.
 
-by safely, do we mean that random people on the internet cannot see our stuff? ad agencies can't see our stuff? the NSA can't see our stuff? *only* computers owned by us and our collaborators (and not the people who made the app) can see our stuff? and what do we even mean by "cannot see our stuff"? how much convenience are we willing to give up for that safety? can we lose access to our stuff? will the app disappear?
+here's what we're searching for: a way for app makers to store their data as easily as storing a file on a computer, that gives users as much control and interoperability as they have over files on their computer, but which is (at least as!) convenient and featureful as using something like Google Docs, WhatsApp, or Zoom.
 
-the temptation (for someone like me, anyway) is to get frustrated with a piece of software and the choices it has made, and wonder why someone hasn't made the right choices yet! aren't the right choices obvious? we haven't even started talking about what the heck we're doing with the actual app yet! the UI, the features, how it organizes our stuff, more choices! there are more possible apps than stars in the observable universe, and lately i've been thinking that part of what prevents software from being `INSERT_POINT_OF_FRUSTRATION_HERE` is this explosion of complexity. in order to make a co-operative software, i have to take a stance on *all* of these questions.
-## so let's break it down!
-what i'm imagining, at the highest level, is that when you use an app, it asks you *where* you want to store your stuff, and it leaves it up to you how you want to make *all* those decisions about safely and conveniently storing your data.
+to start off: there's a lot of assumptions baked into phrases like "conveniently available" and "safely mediating", and it can be pretty hard for a programmer to wrap their head around exactly why this is all such a drag, let alone someone who doesn't in the first place have much of a sense of what's going on in their computer.
+## let's break it down! how should we co-operate with computers?
+by convenient, do we mean we can look at or change our stuff when we don't have internet? our stuff will automagically simultaneously be synchronized between computers all over the world? it feels pretty hard to give up the workflow that google docs brought to the masses. can we see previous versions of our stuff? can we search through all our stuff? how much space on our computers does our stuff take up? can i let people read my stuff but not change it? can i let people add to my stuff, but not read it? and how much does all this cost? who is paying for it?
 
+by safely, do we mean that random people on the internet cannot see our stuff? ad agencies cannot see our stuff? the NSA cannot see our stuff? *only* computers owned by us and our collaborators (and not the people who made the app) can see our stuff? and what do we even mean by "cannot see our stuff"? how much convenience are we willing to give up for that safety? can we lose access to our stuff forever?
+
+the temptation (for someone like me, anyway) is to get frustrated with a piece of software and the choices it has made, and wonder why someone hasn't made the correct choices yet! and while we're on the topic of correct choices, what about the actual app? the UI, the features, how it organizes our stuff. why doesn't someone just go ahead and make the correct choices about those things too?
+
+here's the thing. there are more possible apps than stars in the observable universe (a finding often misattributed to Albert Einstein but actually of unknown origin), and lately i've been thinking that part of why software is always `INSERT_POINT_OF_FRUSTRATION_HERE` is this explosion of complexity. in order to compute co-operatively, i have to take a stance on *all* of these questions, before i can even start thinking about what i'm trying to make.
+## so let's break *that* down, and stop choosing!
+imagine, at the highest level, that when we use an app, it has a way to tell us what stuff it wants to store, and it leaves it up to us to choose where to store that stuff. and the place with all our stuff has a way of telling our apps whether anything has changed in the stuff we store. computer nerds have a name for a "way of telling": a "protocol". for convenience, let's refer to this hypothetical protocol as "myco", because we're fond of the imagery of networks of fungal mycelium interfacing between many different forms of life, and because we're a pastiche of ourselves. here's another thing computer nerds like to say: when a piece of software uses a certain way of telling, we say it "speaks" that protocol. now we can have fun and say that an app "speaks myco"!
+
+so: i've used an app which speaks myco to make some stuff. maybe i just want to store it on my computer. maybe i want to put it in a free proprietary cloud like Google Drive! maybe i want to publish it publically on the internet. maybe i want to keep it totally encrypted and secret. maybe i want send it by carrier pigeon on a USB key. maybe i just want to share it with my housemates. the app doesn't know, the app doesn't care!
+
+conversely, the place where you keep your stuff does not know or care what apps you use. maybe it's a chat app. maybe it's a music app, spreadsheets, camera, recipes, activism, passivism, an app that tracks pun production rates to predict groan intake and budget smirk output. again, don't know, don't care! everybody's speaking to everbody. call it a lingua funga!
+
+now, it goes without saying: *users* might care. the people who *make* apps and storage might also care. but we're imagining a protocol for apps and storage which do not care. however, if we manifest successfully, there'd be nothing stopping someone from riveting their preferred storage solution onto the back of their app or vice versa, so if this turns out to be a good idea it wouldn't just be for the agnosticism zealots!
+
+things are sounding pretty utopic so far, so what's the catch?
+## good news everyone!
+sorry to string you all along like this, but myco kinda already exists, and has for decades. it's called a file system! it fits the bill exactly. file systems can be private, public, shared, kept for one person, all of the above. and apps which use file systems don't really know or care about those choices. conversely, different implementations of file systems and services don't tend to know or care about which apps use them.
+
+so why don't we just encourage the creation of more file system apps and more file system providers that fit different use cases? to answer that question, let's have a peek under the hood and come back to "conveniently available." 
+
+what does an app tell a file system? it might come as a surprise, but as far as both the app and the file system are concerned, a file is basically just one enormous line of text on a strip of paper, that has a little label with a name on it. you can put bundle those strips together into a folder, which also has a name label, and you can put folders in folders too. 
+
+at the highest level, an app can tell the file system:
+- can i see what's on the strip of paper named `alfalfa.jpg` in the folder named `cool_beans`?
+- what folders and strips of paper exist inside `cool_beans`?
+- put the strip of paper `hummus is the best dip!`  in the folder `cool_beans` with the label `garbanzo.txt`. even if there's already another strip with that label, just throw that old garbanzo out!
+- move the strip of paper named `sweet_pea.js` in the folder named `cool_beans` into the folder named `pulsation_station`
+- delete the strip of paper named `lima.mp4` in the folder named `cool_beans`
+
+so, that's a lot to digest. what were we talking about again? right: why don't we make file system providers which give different answers to some of our earlier questions. like, does it synchronize our stuff between our computers? that one turns out to be pretty hard for a file system provider, because of the *way* apps tell file systems about their stuff.
+
+check out this tough nugget: what if two different people put different strips of paper with the same label at the same time? what strip of paper should the file system then tell apps has that label? the default answer chosen by providers like Syncthing, Google Drive, or Dropbox is "whichever strip came second, even if it was only by a millisecond" and that's what they tell apps. the file system provider *itself* can try to help, by keeping the different strips of paper, and allowing users to inspect them and pick which one to keep later.
+
+that'd obviously be quite annoying when it happens, even for one person who works on multiple computers let alone a group of people collaborating at the same time. it's essentially an automated version of `garbanzo_DRAFT_v3_april_PRE_FINAL`, and no one is ever happy about a folder full of `garbanzo_DRAFT_v3_april_PRE_FINAL`. maybe even more importantly, there isn't even a way for an *app* to realize this has happened and do anything about it, because this isn't part of the file system *protocol*, it's a way providers have tried to work *around* the problem. and it's probably one of the biggest reasons why we don't just co-operate by sharing file system folders with each other!
+
+the big lesson here is that the protocol itself — the way apps tell their storage providers about their stuff — affects what answers are even *possible* to give to questions about "conveniently available" and "safely mediating". so if we're making a new protocol, what we should probably try to aim for is enabling a bigger set of possible answers, and maybe focus on answers which other popular protocols have neglected. but no matter what we choose, we're going to preclude some answers from being possible. there is, as always, no such thing as free lunch.
+## so what are we doing here?
+this was supposed to be an essay about co-operative computing. so we're interested in situations where multiple are working on stuff stored with the same provider at the same time. we found out that if apps use a file system protocol, they'll end up doing a bunch of stuff which is really inconvenient in this scenario. so what kinds of things can we do?
+### first, there was nothing
+let's start with the most basic and necessary act: creating a new strip of paper. without this, we have nothing. we can all just stuff strips of paper into the box without bumping into each other. but that's not a great way to organize your stuff. what are you going to do when you need to find a specific strip, look through them all one by one til you find the one you want? that's why file systems have the labels and the folders! but that's exactly where they got into trouble.
+
+if we accept the ideas that:
+- we do need labels to be able to organize our stuff, and 
+- just keeping the most recent strip of paper for each label is not a good way to collaborate on a strip of paper
+then there's no way forward here besides figuring how to make sure that no one picks the same label for the same strip of paper.
+
+there are broadly speaking three ways of doing this:
+- **name labels**: give every *person* a unique label, and then store our strips of paper with both the name of the person *and* the name of the label. then people can just make sure they don't re-use the same label themselves!
+- **random labels**! just mash your fingers on the keyboard to pick a huge and totally random string of letters for the label, so big that there's just no chance someone else will pick the same one. let's try it right now: ourgoabrgjoabnpaidjfhaboawefhoi. go on, you do it too! please e-mail me if you got the same one, it means our fates are intertwined and we must fulfill our destiny together.
+- finally: **hashes**. no, not like breakfast, get your mind out of the griddle! get ready, it's the most complicated one: cleverly calculate a big string of letters using just the letters which are on the strip of paper in question. just make sure to do it *so* cleverly that there's just no chance someone else would come up with a different strip of paper that results in the same label. we're basically going to take all the letters on the strip and carefully jumble them up and combine them really thoroughly, making sure to follow the same recipe each time so they always jumble up the same way. ok, so kind of like breakfast, other than the careful recipe following. i swear to you that hashes are really what computer people call these!
+
+let's take stock: random labels are the simplest, and it seems to work: a big jumble of letters we could never remember or write down ourselves, but which no one else could have guessed until we told them about it. it is pretty annoying that we can't remember them or write them down though.
+
+hashes are more complicated, but it does have the advantage that we can make sure we haven't jumbled up our labels and strips of paper: if the label gets damaged, we can always calculate the label again using the letters on the strip of paper. if the strip of paper gets damaged, we might not be able to calculate the letters again, but at least we'll know something went wrong! and if we're lucky, maybe someone else still has the letters and we can grab them from them. but, doing these calculations is too hard to do by hand, so now we're completely reliant on the computer to calculate the labels for us.
+
+name labels is the most complicated (just ask your friendly local nation state how easy it is to give every person a unique label), and it requires bringing in a lot of assumptions about who will be using the protocol, how they'll identify themselves, how we'll make sure only that person creates files with their unique label, and so on. but random labels and hashes both gave us very hard to remember labels like `r3411yb4db34ns`, whereas with name labels we can still give files descriptive and memorable names like `garbanzo.txt`. if we *also* take on the additional challenge of handing out name labels that are not only unique but also *memorable*, then we finally get an advantage over the other methods: labels a human could remember and write down by hand.
+
+i'm not sure if we have enough information yet to decide which method is best, so let's see if considering other features brings any clarity. regardless of which labelling method, we can now create a strip of paper, and we can give it a label.
+### god is change
+so a natural thing tends to happen when we've written some nice words down on a strip of paper: we look at them, and we think "oh god why am i like this?" and immediately want to light it on fire and start over again. we want to change what we've written. we've already gone over why that's hard when we talked about file systems: if two people change the same strip at the same time, all we can do is either just throw one straight in the garbage, or store *both* new strips and perform automated `garbanzo_DRAFT_v3_april_PRE_FINAL`. 
+
+in fact, this is even harder than creating something new because the label already exists, and everyone already knows about it, so we can't use the same trick from file creation of picking a label that no one else could possibly have chosen. so if we still agree that just throwing data out or keeping all the data indiscriminately are bad options, what choices do we have left? if we take a name labels-esque approach, we could say that only a specific person is allowed to change a specific strip of paper, but that wouldn't be very co-operative. otherwise, we could just say that whatever piece of data is stored at a label, that's the *only* piece of data that will ever get stored at that label. that seems kinda crazy! data never changes? data never changes! take that, octavia.
+
+if we conclude that data never changes, it's actually a bit of a win for the hash mongers. one thing we didn't discuss was that because of how hashes work (the label is determined by the strip of paper), you couldn't have changed which strip goes with which label in the first place, which could be a huge disadvantage. but in this case, it actually doesn't matter!
+### nothing lasts forever
+well, there's a special way of changing a something that isn't so hard to co-operate on: destroying it! if we both try to delete something at the same time, it's ok: the end result can just be that the thing gets deleted. boom, glad at least one of these was easy, right?
+
+ok fine, there's a catch. for two people trying to delete something in the *same* box at the same time, it is that easy. but say someone (even just one person!) decides to delete `garbanzo.txt` from a box which is hooked up to another box. the first box can get rid of the strip of paper, but it has to hang on to the label `garbanzo.txt` and leave a little note that it's been deleted. otherwise, when the two boxes ask each other what's up, the second box will say "well, i've got neat strip of paper called `garbanzo.txt`", and the first will say "oh woah, i've never heard of `garbanzo.txt` in my life!" and add it straight back to its collection.
+
+another hash related quirk here: it's kind of weird to try to delete one. if you delete a strip of paper that says "hi!", and hang on to its label to make sure you remember it was deleted, then if someone else tries to create a strip of paper that says "hi!", you'll say "oh sorry, we deleted that", and they just... can't. so that seems pretty inconvenient for the hash mongers.
+
+ok, we've spent a good amount of time on files, but you may recall there was a second component to file systems.
+### how do i hold all these files?
+labels are definitely helpful for keeping track of our files, but it still kinda sucks to open up a box and just see a giant pile of papers, even if they're labeled. most people with big boxes of paper will group them into folders. how does that work for multiple boxes and multiple people adding to them?
+
+for creating a folder and adding strips of paper and other folders to it, all is good! even if multiple people do this at the same time, and use the same label, we can just add all the strips they both tried to add and it all works out.
+
+moving a strip of paper from one folder to another is a bit more complicated: what should we do if that's done at the same time? we could arbitrarily pick one, but that's not very satisfying in a similar way to randomly picking which update to a strip of paper should happen. what happens if we apply the same rule
+
+## outline
+- intro: articulate current problems:
+	- MxN
+	- hosting and applications are tied together
+	- users do not have control over data
+- solution:
+	- MxN -> M+N
+	- user chooses hosting which is compatible with all their apps
+	- data is stored in a standardized format, which is accessible to the user
+- sidetro: file systems (universes of Px(M+N))
+- the details:
+	- as simple as possible: file system protocol is very dumb, and therefore very flexible
+	- ownership/usability: should be able to run on same device for fast access
+	- necessary operations:
+		- create data
+		- delete data
+		- organize data
+		- request permissions/data
+	- safe operations: create data. delete data (with overhead). organize data?
+	- practical considerations: how would this work on mobile devices etc
+	- tricky use cases:
+		- single doc could reference things from other docs (tag a person! transclusion!)
+		- single doc could have different permissions for different parts (comment/suggest/edit)
+		- where should a share link point?
+		- how does sign-in work?
+## the rest
+- storing multiple copies on duplicate create/update doesn't make sense: how do we differentiate the copies? with a label... but if we can give them unique labels anyway, why not just give them unique labels to begin with?
+- deletion: necessarily delete forever? because multiple boxes. but then can't really delete CAS blobs (because you're not only preventing that *label* from being used forever, you're preventing that *data* from existing forever). could do causal tree of deletions/revokes, but now you're keeping a causal tree. what would an app *expect*? that after deletion, data should be gone, and should not resurrect. should there be manual data resurrection within the scope of a file browser? how should an app respond to such a thing? do we track a hash for folders, and delete *at* a hash? but without keeping the full metadata tree, the hash doesn't tell us what was *in* the folder at deletion time, so a late-joining client couldn't determine which data was *intended* for deletion from just the hash. it's probably a good idea to track the hash at deletion time anyway tho, so we can at least flag if unknown data was deleted.
+	- is there something we can do with tracking epochal clocks such that we can properly permanently delete even tombstones after a time? like say something was created at time X. then box A deletes that thing at time Y. if box A hasn't spoken to box B since before time X, it wouldn't be able to tell whether the thing at X was new. but if box A has spoken to box B since time X, then even without talking to box B, box A can safely delete something. so basically, we only need to hold on to labels newer than the least recent time we talked to any box which we might talk to again. i guess also with a caveat around introducing. basically there are ways in certain circumstances to delete tombstones (especially in a hub-and-spoke model), but with much caveat, and it's still worthwhile to endeavor to reduce tombstone overhead.
+- folders: it's ok if multiple people create and add to the same folder. removing from a folder has the same q about foreverness. what if user initiates detaching & re-attaching the same blob to the same topic repeatedly? must declare CAS blob children at folder creation time? otherwise late-added children must be via transitive folder?
+- why folders instead of just indexes?
+	- in order to determine which data to sync where, we need a pkey?
+- what list operations on folders? should there be a filter? prefix?
+- the safe ops:
+	- create a folder, which is an ID and created at timestamp:
+		- potential metadata:
+			- unique ID
+			- keep track of hash of contents
+			- timestamp?
+			- arbitrary metadata?
+			- optional canonical name? (survives deletions/simultaneous creations, listing based on canonical name means listing all the surviving subfolders simultaneously)
+			- permission enumeration?
+			- roles allowed?
+		- what IDs are allowed?
+		- can we specify that it can never be deleted?
+	- delete a folder by unique ID
+	- moving folders:
+		- here's a use case that's hard to handle here:
+			- as a user, i've given an app permission to store its data in a subfolder (say under "foo"). now i want that subfolder to instead live under "bar", but for any concurrent writes to the folder when it was living under "foo" to still get made to the folder under "bar". is this google drive-like model of a folder as a distinct entity which happens to have a parent possible? how does google drive handle folder cycles? do we just have to relax the notion that there is a "primary" reference to the folder, and therefore accept that deleting a folder may not necessarily fully delete it if various apps have created multiple references to the same folder? but if cycles are allowed, how do nested permissions work? how does google drive handle folder cycles and permissions?
+	- create a file within a folder, which is itself a block and is a list of blocks with size ranges?
+		- i suppose we could likewise allow a file to have a canonical name, and say that listing a file's contents by canonical name is listing the set of lists of blocks of surviving file listings?
+	- delete a file
+		- range pruning!! range pruning!!
+		- compaction via ownership transfer? (but have to retransmit data for compaction?)
+- beyond file systems:
+	- permissions
+	- transclusion
+	- ephemeral data
+	- indexes
+	- synchronize transactions? i.e. if i perform some ops in a transaction on one box, no other box ever sees the intermediate state? what is the point of this, if a different box could've constructed said intermediate state itself anyway? maybe we only need transactions when writing, but not when reading? it still seems useful to have them though: imagine we're using transactions for atomic move ops (delete and create), and doing a big sync. without transaction boundaries, our choices for never communicating a state where the file either doesn't exist or exists twice is to:
+		- wait until sync is done to show changes (high latency, what if data is changing faster than it is syncing, potentially indefinite)
+		- ...?
+- emphasize that the point is that the protocol handles *all* data storage concerns. the app developer is not responsible for storing anything
+## scattered thoughts
+- if we're decoupling application layer from storage/sync, then protocol needs to include identity/authorship?
+- other things protocol may need to include:
+	- delivery status/notifications?
+	- share links?
 ## old/rough
-
 as a software user, i want the changes i make to my data to be visible as fast as possible to both myself and my intended audience, but no one else. and i want to be able to rely on that data to still be there years or even decades into the future. as a software developer, i want to take on as little operational burden as possible.
 
 currently, there are two major paradigms: 

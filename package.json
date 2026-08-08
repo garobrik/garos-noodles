@@ -6,7 +6,11 @@
     "preview": "vike preview",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "import": "tsx scripts/import-noodles.ts"
+    "import": "tsx scripts/import-noodles.ts",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
@@ -32,6 +36,8 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "prettier": "^3.5.2",
     "rehype-react": "^8.0.0",
     "remark-frontmatter": "^5.0.0",

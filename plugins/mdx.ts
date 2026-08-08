@@ -10,9 +10,7 @@ export type MDXOptions = {
   previewLength: number;
 };
 
-const remarkTruncate: Plugin<[MDXOptions?], Root> = (
-  options = { previewLength: 300 },
-) => {
+const remarkTruncate: Plugin<[MDXOptions?], Root> = (options = { previewLength: 300 }) => {
   const maxChars = options.previewLength;
   return (tree: Node) => {
     let charCount = 0;
@@ -64,10 +62,7 @@ export function mdx(options: MDXOptions): PluginOption {
       const [filepath, query] = path.split('?');
       if (!filepath.endsWith('.mdx')) return null;
 
-      const remarkPlugins: PluggableList = [
-        remarkFrontmatter,
-        remarkMdxFrontmatter,
-      ];
+      const remarkPlugins: PluggableList = [remarkFrontmatter, remarkMdxFrontmatter];
 
       if (query === 'preview') {
         remarkPlugins.push([remarkTruncate, options]);

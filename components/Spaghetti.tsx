@@ -9,12 +9,8 @@ const hashString = (str: string, seed = 0) => {
     h1 = Math.imul(h1 ^ ch, 2654435761);
     h2 = Math.imul(h2 ^ ch, 1597334677);
   }
-  h1 =
-    Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^
-    Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-  h2 =
-    Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^
-    Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
 
@@ -91,10 +87,7 @@ function generateNoodle(seedStr: string, variant: SpaghettiVariant): Noodle {
   // round caps clear of the svg's clipping edge
   const span = width - 2 * inset;
   const mean = span / undulations;
-  const segs = Array.from(
-    { length: undulations },
-    () => mean * (0.6 + rand() * 0.8),
-  );
+  const segs = Array.from({ length: undulations }, () => mean * (0.6 + rand() * 0.8));
   const scale = span / segs.reduce((a, b) => a + b, 0);
 
   let d = `M${inset} ${startY.toFixed(1)}`;
@@ -104,10 +97,9 @@ function generateNoodle(seedStr: string, variant: SpaghettiVariant): Noodle {
     const r0 = startY + ((endY - startY) * i) / undulations;
     const r1 = startY + ((endY - startY) * (i + 1)) / undulations;
     const peak = (r0 + r1) / 2 - (i % 2 === 0 ? dir0 : -dir0) * amp;
-    d += ` C${(x + w / 3).toFixed(1)} ${peak.toFixed(1)} ${(
-      x +
-      (2 * w) / 3
-    ).toFixed(1)} ${peak.toFixed(1)} ${(x + w).toFixed(1)} ${r1.toFixed(1)}`;
+    d += ` C${(x + w / 3).toFixed(1)} ${peak.toFixed(1)} ${(x + (2 * w) / 3).toFixed(
+      1,
+    )} ${peak.toFixed(1)} ${(x + w).toFixed(1)} ${r1.toFixed(1)}`;
     x += w;
   }
 
@@ -137,10 +129,7 @@ export const Spaghetti = ({ seed, variant, className }: Props) => {
           className,
         )}
       >
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          className="absolute inset-0 block h-full w-full"
-        >
+        <svg viewBox={`0 0 ${width} ${height}`} className="absolute inset-0 block h-full w-full">
           <path className="spaghetti-noodle" d={d} strokeWidth={sw} />
         </svg>
       </span>
@@ -154,12 +143,7 @@ export const Spaghetti = ({ seed, variant, className }: Props) => {
       preserveAspectRatio="none"
       className={clsx('mx-auto mt-8 w-[calc(100%-3rem)] max-w-3xl', className)}
     >
-      <path
-        className="spaghetti-noodle"
-        vectorEffect="non-scaling-stroke"
-        d={d}
-        strokeWidth={sw}
-      />
+      <path className="spaghetti-noodle" vectorEffect="non-scaling-stroke" d={d} strokeWidth={sw} />
     </svg>
   );
 };

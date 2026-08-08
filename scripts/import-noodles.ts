@@ -18,9 +18,7 @@ async function importNoodles(sourceDir: string): Promise<void> {
   try {
     await fs.access(resolvedSourceDir);
   } catch {
-    console.error(
-      `Error: Source directory does not exist: ${resolvedSourceDir}`,
-    );
+    console.error(`Error: Source directory does not exist: ${resolvedSourceDir}`);
     process.exit(1);
   }
 
@@ -64,10 +62,7 @@ function hasPublishKey(content: string): boolean {
   return /^\s*publish\s*:/im.test(frontmatter);
 }
 
-async function processFile(
-  sourceFile: string,
-  sourceDir: string,
-): Promise<void> {
+async function processFile(sourceFile: string, sourceDir: string): Promise<void> {
   // Get relative path from source directory
   const relativePath = path.relative(sourceDir, sourceFile);
 

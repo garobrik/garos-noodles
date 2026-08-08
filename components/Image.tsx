@@ -10,10 +10,7 @@ export const Image = ({ src, className, alt }: Props) => {
   //   src = import.meta.env.BASE_URL + src.replace('/', '');
   // }
   src = normalize(src);
-  return (
-    <img src={src} alt={alt} className={clsx('mx-auto pb-4', className)} />
-  );
+  return <img src={src} alt={alt} className={clsx('mx-auto pb-4', className)} />;
 };
 
-const normalize = (url: string) =>
-  '/' + url.split('/').filter(Boolean).join('/');
+const normalize = (url: string) => '/' + url.split('/').filter(Boolean).join('/');

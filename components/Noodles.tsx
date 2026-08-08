@@ -20,10 +20,10 @@ type NoodleModule = {
 
 const pages = getGlobalContextSync().pages;
 
-const noodleModules = import.meta.glob<NoodleModule>(
-  '/pages/\\(noodle\\)/**/\\+Page.mdx',
-  { eager: true, query: '?preview' },
-);
+const noodleModules = import.meta.glob<NoodleModule>('/pages/\\(noodle\\)/**/\\+Page.mdx', {
+  eager: true,
+  query: '?preview',
+});
 
 const noodles = Object.entries(noodleModules).map(([path, module]) => {
   return {
@@ -34,10 +34,7 @@ const noodles = Object.entries(noodleModules).map(([path, module]) => {
 });
 
 const listableNoodles = noodles
-  .filter(
-    ({ noodle }) =>
-      noodle !== undefined && !noodle.draft && noodle.publish === 'listed',
-  )
+  .filter(({ noodle }) => noodle !== undefined && !noodle.draft && noodle.publish === 'listed')
   .sort((a, b) => (b.noodle.added ?? '').localeCompare(a.noodle.added ?? ''));
 
 export const Noodles = () => {

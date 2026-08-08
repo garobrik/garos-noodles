@@ -14,16 +14,10 @@ export default function LayoutDefault({ children }: React.PropsWithChildren) {
           <Spaghetti seed="/" variant="underline" />
         </Link>
         <div className="flex gap-4">
-          <Link
-            href="/about"
-            className="font-serif font-soft text-lg sm:text-xl font-semibold"
-          >
+          <Link href="/about" className="font-serif font-soft text-lg sm:text-xl font-semibold">
             subscribe
           </Link>
-          <Link
-            href="/about"
-            className="font-serif font-soft text-lg sm:text-xl font-semibold"
-          >
+          <Link href="/about" className="font-serif font-soft text-lg sm:text-xl font-semibold">
             about
           </Link>
         </div>

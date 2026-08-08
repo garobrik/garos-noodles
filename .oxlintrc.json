@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "browser": true,
+    "serviceworker": true
+  },
+  "ignorePatterns": [
+    "dist",
+    // Temporary compiled files
+    "**/*.ts.build-*.mjs",
+    // JS files at the root of the project
+    "*.js",
+    "*.cjs",
+    "*.mjs",
+    "*.css"
+  ],
+  "plugins": ["react", "typescript", "unicorn", "oxc"],
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-namespace": "off"
+  }
+}

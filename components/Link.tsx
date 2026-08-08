@@ -9,8 +9,7 @@ type Props = React.PropsWithChildren<{
 export function Link({ href, className, children }: Props) {
   const pageContext = usePageContext();
   const { urlPathname } = pageContext;
-  const isActive =
-    href === '/' ? urlPathname === href : urlPathname.startsWith(href);
+  const isActive = href === '/' ? urlPathname === href : urlPathname.startsWith(href);
   href = import.meta.env.BASE_URL + href;
   href = normalize(href);
   return (
@@ -20,5 +19,4 @@ export function Link({ href, className, children }: Props) {
   );
 }
 
-const normalize = (url: string) =>
-  '/' + url.split('/').filter(Boolean).join('/');
+const normalize = (url: string) => '/' + url.split('/').filter(Boolean).join('/');

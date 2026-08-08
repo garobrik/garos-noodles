@@ -6,6 +6,7 @@
     "build": "vike build",
     "preview": "vike preview",
     "lint": "oxlint",
+    "check": "tsc",
     "format": "oxfmt --write",
     "import": "tsx scripts/import-noodles.ts",
     "prepare": "husky"

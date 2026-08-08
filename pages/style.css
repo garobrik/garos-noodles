@@ -1,9 +1,44 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Fraunces Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/fraunces-latin-full-normal.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Fraunces Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/fraunces-latin-full-italic.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url('/fonts/literata-latin-opsz-normal.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Literata Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url('/fonts/literata-latin-opsz-italic.woff2') format('woff2-variations');
+}
+
 @theme {
   --color-bg: oklch(98% 0.005 60);
   --color-on-bg: oklch(18% 0.1 115);
   --color-accent: oklch(56% 0.05 154);
+
+  --font-body: 'Literata Variable', ui-serif, Georgia, serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif;
 }
 
 @layer theme {
@@ -16,21 +51,28 @@
   }
 }
 
+@utility font-wonk {
+  font-variation-settings: 'WONK' 1;
+}
+
+@utility font-soft {
+  font-variation-settings: 'SOFT' 100;
+}
+
 @layer base {
   html {
-    @apply font-sans text-on-bg bg-bg;
+    @apply font-body text-on-bg bg-bg;
   }
-
   h1 {
-    @apply text-xl font-medium mt-8 mb-4;
+    @apply font-serif text-2xl sm:text-3xl font-medium mt-8 mb-4;
   }
 
   h2 {
-    @apply text-xl font-medium mt-12 mb-4;
+    @apply font-serif text-xl sm:text-2xl font-medium mt-8 mb-2;
   }
   
   h3 {
-    @apply text-xl font-light mt-8 mb-4;
+    @apply font-serif text-xl font-light mt-8 mb-4;
   }
 
   main {
@@ -60,7 +102,7 @@
     }
 
     a {
-      @apply underline;
+      @apply underline decoration-wavy;
     }
 
     img {
@@ -75,4 +117,17 @@
   :last-child {
     @apply ms-auto;
   }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Spaghetti decorations — one seeded generator (components/Spaghetti), */
+/* stroke width comes from the per-seed value, not CSS                */
+/* ------------------------------------------------------------------ */
+
+.spaghetti-noodle {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

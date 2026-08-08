@@ -1,5 +1,6 @@
 import { getGlobalContextSync } from 'vike/server';
 import { Link } from './Link';
+import { Spaghetti } from './Spaghetti';
 import { Fragment } from 'react/jsx-runtime';
 
 export type Noodle = {
@@ -42,12 +43,14 @@ const listableNoodles = noodles
 export const Noodles = () => {
   return listableNoodles.map(({ noodle, page: { route }, Content }, index) => (
     <Fragment key={route as string}>
-      {index > 0 && <hr className="mt-8" />}
+      {index > 0 && <Spaghetti seed={route as string} variant="divider" />}
       <div className="space-between-wrap mb-4">
         <Link href={route as string}>
-          <h1 className="underline mb-0">{noodle.title}</h1>
+          <h1 className="mb-0">{noodle.title}</h1>
         </Link>
-        <Link href={route as string}>{noodle.added}</Link>
+        <Link className="italic no-underline hover:underline font-serif font-soft" href={route as string}>
+          {noodle.added.replaceAll('/', '.')}
+        </Link>
       </div>
       <Content />
     </Fragment>

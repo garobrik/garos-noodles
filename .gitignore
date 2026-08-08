@@ -3,3 +3,4 @@ dist
 .obsidian
 .vscode
 .stfolder
+.playwright-cli/

@@ -44,8 +44,8 @@
 @layer theme {
   :root {
     @media (prefers-color-scheme: dark) {
-      --color-bg: oklch(15% 0.05 90);
-      --color-on-bg: oklch(98% 0.005 60);
+      --color-bg: rgba(50, 39, 29, 1);
+      --color-on-bg: rgba(241, 234, 228, 1);
       --color-accent: oklch(56% 0.1 120);
     }
   }

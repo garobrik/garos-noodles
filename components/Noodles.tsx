@@ -48,7 +48,10 @@ export const Noodles = () => {
         <Link href={route as string}>
           <h1 className="mb-0">{noodle.title}</h1>
         </Link>
-        <Link className="italic no-underline hover:underline font-serif font-soft" href={route as string}>
+        <Link
+          className="italic no-underline hover:underline font-serif font-soft"
+          href={route as string}
+        >
           {noodle.added.replaceAll('/', '.')}
         </Link>
       </div>

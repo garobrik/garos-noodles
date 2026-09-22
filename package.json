@@ -3,12 +3,14 @@
   "type": "module",
   "scripts": {
     "dev": "vike dev",
+    "prebuild": "npm run seo",
     "build": "vike build",
     "preview": "vike preview",
     "lint": "oxlint",
     "check": "tsc",
     "format": "oxfmt --write",
     "import": "tsx scripts/import-noodles.ts",
+    "seo": "tsx scripts/generate-seo.ts",
     "prepare": "husky"
   },
   "dependencies": {
@@ -42,7 +44,8 @@
     "tsx": "^4.23.11",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
-    "vite-plugin-babel": "^1.7.3"
+    "vite-plugin-babel": "^1.7.3",
+    "yaml": "^2.9.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "oxlint"

@@ -3,14 +3,12 @@
   "type": "module",
   "scripts": {
     "dev": "vike dev",
-    "prebuild": "npm run seo",
     "build": "vike build",
     "preview": "vike preview",
     "lint": "oxlint",
     "check": "tsc",
     "format": "oxfmt --write",
     "import": "tsx scripts/import-noodles.ts",
-    "seo": "tsx scripts/generate-seo.ts",
     "prepare": "husky"
   },
   "dependencies": {

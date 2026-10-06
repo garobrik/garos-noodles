@@ -69,15 +69,42 @@
 
   main {
     p,
-    ul {
+    ul,
+    ol {
       @apply mb-3;
     }
 
+    ul,
+    ol {
+      @apply ps-6;
+
+      ul,
+      ol {
+        @apply ps-4;
+      }
+    }
+
     ul {
-      @apply list-disc ps-6;
+      @apply list-disc;
 
       ul {
-        @apply ps-4;
+        @apply list-[circle];
+
+        ul {
+          @apply list-[square];
+        }
+      }
+    }
+
+    ol {
+      @apply list-decimal;
+
+      ol {
+        @apply list-[lower-alpha];
+
+        ol {
+          @apply list-[lower-roman];
+        }
       }
     }
 

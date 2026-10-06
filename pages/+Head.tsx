@@ -19,6 +19,12 @@ export function Head() {
     <>
       {isUnpublishedNoodle && <meta name="robots" content="noindex" />}
       <link
+        rel="alternate"
+        type="application/atom+xml"
+        title="garo's noodle garden"
+        href="/atom.xml"
+      />
+      <link
         rel="preload"
         href="/fonts/fraunces-latin-full-normal.woff2"
         as="font"

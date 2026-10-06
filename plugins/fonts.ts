@@ -50,6 +50,9 @@ const CLASS_TOKENS: Record<string, Partial<Tokens>> = {
   'font-semibold': { weight: 600 },
   'font-bold': { weight: 700 },
   'font-soft': { soft: true },
+  // bold `#` permalink marks (pages/style.css .heading-hash/.heading-anchor)
+  'heading-hash': { weight: 700 },
+  'heading-anchor': { weight: 700 },
 };
 
 // Hardcoded relationship between yaml frontmatter fields and the styles they
@@ -342,6 +345,27 @@ function scanTsx(state: ScanState, source: string): void {
 // Element rules + base tokens from pages/style.css
 // ---------------------------------------------------------------------------
 
+// Split a selector list on top-level commas only: commas nested in functional
+// pseudo-classes (`:is(h1, h2)`) do not separate selectors, and mangling those
+// into bare `h2`/`h3` pieces would leak one rule's tokens into element rules.
+function splitSelectors(selector: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const ch of selector) {
+    if (ch === '(') depth++;
+    else if (ch === ')') depth = Math.max(0, depth - 1);
+    if (ch === ',' && depth === 0) {
+      out.push(current);
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+  out.push(current);
+  return out;
+}
+
 function parseStyleCss(css: string): { baseTokens: Tokens; elementRules: Map<string, Partial<Tokens>> } {
   const elementRules = new Map<string, Partial<Tokens>>();
   const blockRe = /([^{}]+)\{([^{}]*)\}/g;
@@ -354,7 +378,7 @@ function parseStyleCss(css: string): { baseTokens: Tokens; elementRules: Map<str
     for (const cls of apply[1].split(/\s+/)) {
       if (CLASS_TOKENS[cls]) ruleTokens = { ...ruleTokens, ...CLASS_TOKENS[cls] };
     }
-    for (const sel of selector.split(',')) {
+    for (const sel of splitSelectors(selector)) {
       const name = sel.trim();
       if (/^[a-z][a-z0-9]*$/.test(name) && Object.keys(ruleTokens).length > 0) {
         elementRules.set(name, { ...elementRules.get(name), ...ruleTokens });

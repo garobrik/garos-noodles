@@ -5,7 +5,8 @@
     "dev": "vike dev",
     "build": "vike build",
     "preview": "vike preview",
-    "lint": "oxlint",
+    "lint": "oxlint && npm run lint:images",
+    "lint:images": "node scripts/optimize-images.mjs",
     "check": "tsc",
     "format": "oxfmt --write",
     "import": "tsx scripts/import-noodles.ts",
@@ -32,6 +33,11 @@
     "clsx": "^2.1.1",
     "esbuild": "^0.28.2",
     "husky": "^9.1.7",
+    "imagemin": "^9.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-jpegtran": "^8.0.0",
+    "imagemin-optipng": "^8.0.0",
+    "imagemin-svgo": "^12.0.0",
     "lint-staged": "^17.3.0",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.77.0",
@@ -50,6 +56,7 @@
     "yaml": "^2.9.1"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "oxlint"
+    "*.{js,jsx,ts,tsx}": "oxlint",
+    "*.{png,jpg,jpeg,gif,svg}": "node scripts/optimize-images.mjs"
   }
 }

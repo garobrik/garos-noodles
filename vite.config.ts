@@ -13,15 +13,16 @@ export default defineConfig({
     vike({}),
     fonts(),
     responsiveImages({
-      // pages/+Layout.tsx renders content in a `max-w-[45rem]` column: 720px.
-      // Build renditions never exceed that in either dimension.
-      maxDimension: 720,
-      // the rendered slot: full viewport minus the column padding, up to the
-      // 688px inner width of the column
+      // squoosh-style: no resize (the browser scales, same as the original
+      // png/jpg), webp quality 75 at encoder effort 4. Add `maxDimension` to
+      // emit a downscaled ladder instead.
+      // sizes: the rendered slot (pages/+Layout.tsx column: max-w-[45rem] =
+      // 720px, minus its px-4 padding = 688px)
       sizes: '(max-width: 45rem) calc(100vw - 2rem), 43rem',
-      quality: 80,
-      // flip to true to compare against true lossless webp (~4.5x bigger);
-      // `quality` only tunes lossy compression, 100 is NOT lossless
+      quality: 75,
+      effort: 4,
+      // flip to true to compare against true lossless webp; `quality` only
+      // tunes lossy compression, 100 is NOT lossless
       lossless: false,
     }),
     mdx({ previewLength: 1000 }),

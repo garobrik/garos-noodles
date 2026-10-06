@@ -11,19 +11,23 @@ import type { Plugin } from 'vite';
 export const RESPONSIVE_IMAGE_RE = /\.(png|jpe?g)$/i;
 
 export type ResponsiveImagesOptions = {
-  /**
-   * Cap for the largest dimension of every rendition, in CSS px. The build
-   * pipeline never emits anything bigger than this, in either dimension.
-   */
-  maxDimension: number;
   /** WebP quality for lossy encoding; ignored when `lossless` is set. */
   quality: number;
+  /** WebP encoder effort (0-6, slower = smaller). */
+  effort?: number;
   /**
    * Encode true lossless WebP instead of lossy — pixel-identical to the
    * resized rendition, notably bigger. (`quality: 100` is still lossy; this is
    * the switch that actually compares lossy vs lossless.)
    */
   lossless?: boolean;
+  /**
+   * Optional cap for the largest dimension of every rendition, in CSS px,
+   * emitting a downscaled ladder. Omit for no resize at all: one full-size
+   * rendition per image, and the browser scales it (same as serving the
+   * original, so no resampling quality is lost).
+   */
+  maxDimension?: number;
   /**
    * Rendition ladder as descending fractions of `maxDimension`, applied to the
    * image's largest dimension. Sources smaller than a step are never enlarged,
@@ -76,6 +80,7 @@ const outputState: { root: string; staticDir: string } = {
 export const responsiveImages = ({
   maxDimension,
   quality,
+  effort = 4,
   lossless = false,
   ladder = [1, 2 / 3, 1 / 3],
   sizes,
@@ -126,15 +131,15 @@ export const responsiveImages = ({
       const source = await fs.readFile(file);
       const name = path.basename(file).replace(/\.[^.]+$/, '');
 
+      const targets = maxDimension === undefined ? [null] : ladder.map((f) => Math.round(maxDimension * f));
       const byWidth = new Map<number, Rendition>();
-      for (const fraction of ladder) {
-        const target = Math.round(maxDimension * fraction);
-        const data = await sharp(source)
-          .resize({ width: target, height: target, fit: 'inside', withoutEnlargement: true })
-          .webp({ quality, lossless })
-          .toBuffer();
+      for (const target of targets) {
+        const image = sharp(source);
+        if (target !== null)
+          image.resize({ width: target, height: target, fit: 'inside', withoutEnlargement: true });
+        const data = await image.webp({ quality, effort, lossless }).toBuffer();
         const meta = await sharp(data).metadata();
-        const width = meta.width ?? target;
+        const width = meta.width ?? 0;
         if (byWidth.has(width)) continue;
 
         const fileName = `assets/${name}-${width}w-${createHash('sha256')

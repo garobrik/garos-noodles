@@ -20,6 +20,9 @@ export default defineConfig({
       // 688px inner width of the column
       sizes: '(max-width: 45rem) calc(100vw - 2rem), 43rem',
       quality: 80,
+      // flip to true to compare against true lossless webp (~4.5x bigger);
+      // `quality` only tunes lossy compression, 100 is NOT lossless
+      lossless: false,
     }),
     mdx({ previewLength: 1000 }),
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),

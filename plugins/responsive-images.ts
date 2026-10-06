@@ -16,8 +16,14 @@ export type ResponsiveImagesOptions = {
    * pipeline never emits anything bigger than this, in either dimension.
    */
   maxDimension: number;
-  /** WebP quality for every rendition. */
+  /** WebP quality for lossy encoding; ignored when `lossless` is set. */
   quality: number;
+  /**
+   * Encode true lossless WebP instead of lossy — pixel-identical to the
+   * resized rendition, notably bigger. (`quality: 100` is still lossy; this is
+   * the switch that actually compares lossy vs lossless.)
+   */
+  lossless?: boolean;
   /**
    * Rendition ladder as descending fractions of `maxDimension`, applied to the
    * image's largest dimension. Sources smaller than a step are never enlarged,
@@ -70,6 +76,7 @@ const outputState: { root: string; staticDir: string } = {
 export const responsiveImages = ({
   maxDimension,
   quality,
+  lossless = false,
   ladder = [1, 2 / 3, 1 / 3],
   sizes,
 }: ResponsiveImagesOptions): Plugin => {
@@ -124,7 +131,7 @@ export const responsiveImages = ({
         const target = Math.round(maxDimension * fraction);
         const data = await sharp(source)
           .resize({ width: target, height: target, fit: 'inside', withoutEnlargement: true })
-          .webp({ quality })
+          .webp({ quality, lossless })
           .toBuffer();
         const meta = await sharp(data).metadata();
         const width = meta.width ?? target;

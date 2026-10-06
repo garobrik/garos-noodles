@@ -7,6 +7,7 @@ import type { PluginOption } from 'vite';
 import type { PluggableList, Plugin } from 'unified';
 import type { Root, Text, Parent, Node } from 'mdast';
 import { visitParents, EXIT } from 'unist-util-visit-parents';
+import { createSlugger } from '../lib/slug.ts';
 
 export type MDXOptions = {
   previewLength: number;
@@ -47,6 +48,12 @@ const remarkTruncate: Plugin<[MDXOptions?], Root> = (options = { previewLength: 
         charCount += chars;
       }
     });
+
+    // let consumers (components/Noodles.tsx) know whether they got a
+    // cut-off preview or the whole noodle
+    (tree as unknown as { children: LooseNode[] }).children.unshift(
+      exportConstBoolean('truncated', truncated),
+    );
   };
 };
 
@@ -218,6 +225,111 @@ const remarkImages: Plugin<[string], Root> = (filePath) => (tree) => {
   (tree.children as unknown as LooseNode[]).unshift(...(imports as unknown as LooseNode[]));
 };
 
+/* ------------------------------------------------------------------------
+ * Heading anchors
+ *
+ * every heading gets a slug id and wraps its content in a self-link, so
+ * headings are linkable (`#slug`) and anchor to themselves: hovering one
+ * shows the familiar `#` and underlines it (styling lives in pages/style.css).
+ * a heading that already contains a link can't wrap one around itself
+ * (nested <a> is invalid), so it only gets the id and a trailing `#` link.
+ * --------------------------------------------------------------------- */
+
+const nodeText = (node: LooseNode): string => {
+  if (typeof node.value === 'string' && (node.type === 'text' || node.type === 'inlineCode')) {
+    return node.value;
+  }
+  return Array.isArray(node.children) ? node.children.map(nodeText).join('') : '';
+};
+
+const nodeHasLink = (node: LooseNode): boolean =>
+  node.type === 'link' ||
+  node.type === 'linkReference' ||
+  (node.type === 'mdxJsxTextElement' && node.name === 'a') ||
+  (Array.isArray(node.children) && node.children.some(nodeHasLink));
+
+const anchorAttributes = (id: string, className: string, label?: string): MdxJsxAttribute[] => [
+  { type: 'mdxJsxAttribute', name: 'href', value: `#${id}` },
+  { type: 'mdxJsxAttribute', name: 'className', value: className },
+  // only the bare `#` permalink needs a label; the self-link's text is the
+  // heading text, and an aria-label here would leak into the heading's name
+  ...(label ? [{ type: 'mdxJsxAttribute' as const, name: 'aria-label', value: label }] : []),
+];
+
+/* the `#` shown on hover — a real, aria-hidden node (css generated content
+   would end up in the heading's accessible name) */
+const hashMark = (): LooseNode => ({
+  type: 'mdxJsxTextElement',
+  name: 'span',
+  attributes: [
+    { type: 'mdxJsxAttribute', name: 'className', value: 'heading-hash' },
+    { type: 'mdxJsxAttribute', name: 'aria-hidden', value: 'true' },
+  ],
+  children: [{ type: 'text', value: '#' }],
+});
+
+const remarkHeadingAnchors: Plugin<[], Root> = () => (tree) => {
+  const slug = createSlugger();
+
+  visitParents(tree, 'heading', (node) => {
+    const heading = node as unknown as MdxJsxElement & { data?: Record<string, unknown> };
+    const text = nodeText(heading as unknown as LooseNode);
+    const id = slug(text);
+
+    heading.data = { ...heading.data, hProperties: { id } };
+
+    if (nodeHasLink(heading as unknown as LooseNode)) {
+      heading.children.push({
+        type: 'mdxJsxTextElement',
+        name: 'a',
+        attributes: anchorAttributes(id, 'heading-anchor', 'permalink'),
+        children: [{ type: 'text', value: '#' }],
+      });
+      return;
+    }
+
+    heading.children = [
+      {
+        type: 'mdxJsxTextElement',
+        name: 'a',
+        attributes: anchorAttributes(id, 'heading-link'),
+        children: [...heading.children, hashMark()],
+      },
+    ];
+  });
+};
+
+/** `export const <name> = <value>;` as a hand-built mdx node */
+const exportConstBoolean = (name: string, value: boolean): MdxjsEsmNode => ({
+  type: 'mdxjsEsm',
+  value: `export const ${name} = ${value};`,
+  data: {
+    estree: {
+      type: 'Program',
+      sourceType: 'module',
+      body: [
+        {
+          type: 'ExportNamedDeclaration',
+          exportKind: 'value',
+          specifiers: [],
+          source: null,
+          declaration: {
+            type: 'VariableDeclaration',
+            kind: 'const',
+            declarations: [
+              {
+                type: 'VariableDeclarator',
+                id: { type: 'Identifier', name },
+                init: { type: 'Literal', value, raw: String(value) },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+});
+
 export function mdx(options: MDXOptions): PluginOption {
   let development = false;
 
@@ -241,6 +353,8 @@ export function mdx(options: MDXOptions): PluginOption {
       if (query === 'preview') {
         remarkPlugins.push([remarkTruncate, options]);
       }
+
+      remarkPlugins.push(remarkHeadingAnchors);
 
       const compiled = await compile(code, {
         remarkPlugins,

@@ -21,6 +21,7 @@ export function Head() {
   return (
     <>
       {isUnpublishedNoodle && <meta name="robots" content="noindex" />}
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <link
         rel="alternate"
         type="application/atom+xml"

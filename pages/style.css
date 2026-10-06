@@ -114,6 +114,48 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Heading permalinks — every heading links to its own anchor          */
+/* (plugins/mdx.ts, pages/(noodle)/+Layout.tsx), showing the familiar  */
+/* `#` + underline on hover                                            */
+/* ------------------------------------------------------------------ */
+
+:is(h1, h2, h3, h4, h5, h6) {
+  @apply scroll-mt-4;
+}
+
+:is(h1, h2, h3, h4, h5, h6) .heading-link {
+  @apply no-underline;
+}
+
+/* the familiar `#` permalink, hidden until hover */
+:is(h1, h2, h3, h4, h5, h6) .heading-hash {
+  @apply ms-2 inline-block opacity-0 transition-opacity;
+}
+
+:is(h1, h2, h3, h4, h5, h6):hover .heading-hash,
+:is(h1, h2, h3, h4, h5, h6):target .heading-hash,
+:is(h1, h2, h3, h4, h5, h6) .heading-link:focus-visible .heading-hash {
+  @apply opacity-100;
+}
+
+:is(h1, h2, h3, h4, h5, h6):hover .heading-link,
+:is(h1, h2, h3, h4, h5, h6) .heading-link:hover {
+  @apply underline;
+}
+
+/* headings that already contain a link can't self-link (nested <a>), so
+   they carry a bare `#` permalink instead */
+:is(h1, h2, h3, h4, h5, h6) .heading-anchor {
+  @apply ms-2 no-underline opacity-0 transition-opacity;
+}
+
+:is(h1, h2, h3, h4, h5, h6):hover .heading-anchor,
+:is(h1, h2, h3, h4, h5, h6):target .heading-anchor,
+:is(h1, h2, h3, h4, h5, h6) .heading-anchor:focus-visible {
+  @apply underline opacity-100;
+}
+
 
 /* ------------------------------------------------------------------ */
 /* Spaghetti decorations — one seeded generator (components/Spaghetti), */

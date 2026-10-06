@@ -16,6 +16,7 @@ export type Noodle = {
 type NoodleModule = {
   frontmatter: Noodle;
   default: React.FC;
+  truncated: boolean;
 };
 
 const pages = getGlobalContextSync().pages;
@@ -29,6 +30,7 @@ const noodles = Object.entries(noodleModules).map(([path, module]) => {
   return {
     noodle: module.frontmatter,
     Content: module.default,
+    truncated: module.truncated,
     page: pages[path.replace('/+Page.mdx', '')],
   };
 });
@@ -38,7 +40,7 @@ const listableNoodles = noodles
   .sort((a, b) => (b.noodle.added ?? '').localeCompare(a.noodle.added ?? ''));
 
 export const Noodles = () => {
-  return listableNoodles.map(({ noodle, page: { route }, Content }, index) => (
+  return listableNoodles.map(({ noodle, page: { route }, Content, truncated }, index) => (
     <Fragment key={route as string}>
       {index > 0 && <Spaghetti seed={route as string} variant="divider" />}
       <div className="space-between-wrap mb-4">
@@ -53,6 +55,11 @@ export const Noodles = () => {
         </Link>
       </div>
       <Content />
+      {truncated && (
+        <p className="mt-2 text-end italic font-serif font-soft">
+          <Link href={route as string}>continue reading →</Link>
+        </p>
+      )}
     </Fragment>
   ));
 };

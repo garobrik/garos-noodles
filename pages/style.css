@@ -128,13 +128,12 @@
   @apply no-underline;
 }
 
-/* the familiar `#` permalink, hidden until hover */
+/* the familiar `#` permalink, bold and shown instantly on hover */
 :is(h1, h2, h3, h4, h5, h6) .heading-hash {
-  @apply ms-2 inline-block opacity-0 transition-opacity;
+  @apply ms-2 inline-block font-bold opacity-0;
 }
 
 :is(h1, h2, h3, h4, h5, h6):hover .heading-hash,
-:is(h1, h2, h3, h4, h5, h6):target .heading-hash,
 :is(h1, h2, h3, h4, h5, h6) .heading-link:focus-visible .heading-hash {
   @apply opacity-100;
 }
@@ -147,11 +146,10 @@
 /* headings that already contain a link can't self-link (nested <a>), so
    they carry a bare `#` permalink instead */
 :is(h1, h2, h3, h4, h5, h6) .heading-anchor {
-  @apply ms-2 no-underline opacity-0 transition-opacity;
+  @apply ms-2 font-bold no-underline opacity-0;
 }
 
 :is(h1, h2, h3, h4, h5, h6):hover .heading-anchor,
-:is(h1, h2, h3, h4, h5, h6):target .heading-anchor,
 :is(h1, h2, h3, h4, h5, h6) .heading-anchor:focus-visible {
   @apply underline opacity-100;
 }

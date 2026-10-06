@@ -16,11 +16,11 @@ export default function LayoutDefault({ children }: React.PropsWithChildren) {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/about" aria-label="subscribe" className="hover:underline">
-            <Mail size={20} />
+            <Mail size={20} strokeWidth={2.5} />
           </Link>
           {/* not a vike page: keep client-side routing from intercepting it */}
           <a href="/atom.xml" rel="external" aria-label="atom feed" className="hover:underline">
-            <Rss size={20} />
+            <Rss size={20} strokeWidth={2.5} />
           </a>
           <Link href="/about" className="font-serif font-soft text-lg sm:text-xl font-semibold">
             about

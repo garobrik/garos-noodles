@@ -1,3 +1,4 @@
+import { Mail, Rss } from 'lucide-react';
 import { Link } from '../components/Link';
 import { Spaghetti } from '../components/Spaghetti';
 import './style.css';
@@ -13,10 +14,14 @@ export default function LayoutDefault({ children }: React.PropsWithChildren) {
           garo's noodle garden
           <Spaghetti seed="/" variant="underline" />
         </Link>
-        <div className="flex gap-4">
-          <Link href="/about" className="font-serif font-soft text-lg sm:text-xl font-semibold">
-            subscribe
+        <div className="flex items-center gap-4">
+          <Link href="/about" aria-label="subscribe" className="hover:underline">
+            <Mail size={20} />
           </Link>
+          {/* not a vike page: keep client-side routing from intercepting it */}
+          <a href="/atom.xml" rel="external" aria-label="atom feed" className="hover:underline">
+            <Rss size={20} />
+          </a>
           <Link href="/about" className="font-serif font-soft text-lg sm:text-xl font-semibold">
             about
           </Link>

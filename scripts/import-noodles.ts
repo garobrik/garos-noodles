@@ -200,16 +200,13 @@ async function processFile(sourceFile: string, sourceDir: string): Promise<void>
       return;
     }
 
-    // Remove .md extension and split path
+    // Remove .md extension: the noodle is imported to its file name's slug,
+    // e.g. `noodles/2025/09/15/gibson-measure.md` -> `pages/(noodle)/gibson-measure`
     const pathWithoutExt = relativePath.replace(/\.md$/, '');
-    const pathParts = pathWithoutExt.split(path.sep);
-
-    // Last part is the slug, rest is directory structure
-    const slug = slugify(pathParts[pathParts.length - 1]);
-    const subdirs = pathParts.slice(0, -1).map(slugify);
+    const slug = slugify(path.basename(relativePath, '.md'));
 
     // Construct target directory
-    const targetDir = path.join(NOODLE_DIR, ...subdirs, slug);
+    const targetDir = path.join(NOODLE_DIR, slug);
     const targetFile = path.join(targetDir, '+Page.mdx');
 
     // Create target directory structure
@@ -270,8 +267,30 @@ async function importNoodles(sourceDir: string): Promise<void> {
 
   const files = await getAllMarkdownFiles(resolvedSourceDir);
 
+  warnDuplicateSlugs(files, resolvedSourceDir);
+
   for (const file of files) {
     await processFile(file, resolvedSourceDir);
+  }
+}
+
+// Two source files can share a file name and therefore a slug. We warn about
+// that and leave it at that: no renaming, no skipping, no merging - both get
+// imported like always (whichever is imported last owns the target folder).
+function warnDuplicateSlugs(files: string[], sourceDir: string): void {
+  const sourcesBySlug = new Map<string, string[]>();
+
+  for (const file of files) {
+    const slug = slugify(path.basename(file, '.md'));
+    sourcesBySlug.set(slug, [...(sourcesBySlug.get(slug) ?? []), path.relative(sourceDir, file)]);
+  }
+
+  for (const [slug, sources] of sourcesBySlug) {
+    if (sources.length > 1) {
+      console.warn(
+        `⚠ duplicate slug "${slug}": ${sources.join(', ')} all import to ${path.relative(process.cwd(), path.join(NOODLE_DIR, slug))}`,
+      );
+    }
   }
 }
 

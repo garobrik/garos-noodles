@@ -8,6 +8,7 @@ import type { PluggableList, Plugin } from 'unified';
 import type { Root, Text, Parent, Node } from 'mdast';
 import { visitParents, EXIT } from 'unist-util-visit-parents';
 import { createSlugger } from '../lib/slug.ts';
+import { RESPONSIVE_IMAGE_RE } from './responsive-images.ts';
 
 export type MDXOptions = {
   previewLength: number;
@@ -69,7 +70,7 @@ const remarkTruncate: Plugin<[MDXOptions?], Root> = (options = { previewLength: 
 // we hand-build a few mdx nodes here (import statements, <img> elements), and
 // mdast's types don't model hand-built nodes well, so they live as loose shapes
 // and only get cast when spliced into the tree
-type LooseNode = { type: string; [key: string]: unknown };
+type LooseNode = { type: string; [key: string]: any };
 
 type EstreeProgram = { type: 'Program'; sourceType: 'module'; body: LooseNode[] };
 
@@ -106,18 +107,62 @@ const toModuleSpecifier = (url: string) => {
   return withoutHash.startsWith('.') ? withoutHash : './' + withoutHash;
 };
 
-const importDeclaration = (id: string, source: string): MdxjsEsmNode['data']['estree'] => ({
+const importDeclaration = (
+  id: string,
+  source: string,
+  responsive: boolean,
+): MdxjsEsmNode['data']['estree'] => ({
   type: 'Program',
   sourceType: 'module',
   body: [
     {
       type: 'ImportDeclaration',
       importKind: 'value',
-      specifiers: [{ type: 'ImportDefaultSpecifier', local: { type: 'Identifier', name: id } }],
+      specifiers: [
+        { type: 'ImportDefaultSpecifier', local: { type: 'Identifier', name: id } },
+        ...(responsive ? responsiveSpecifiers(id) : []),
+      ],
       source: { type: 'Literal', value: source, raw: JSON.stringify(source) },
     },
   ],
 });
+
+// responsive image modules export more than the url (see
+// plugins/responsive-images.ts): `srcset`/`sizes` for the <img> attributes and
+// `width`/`height` of the largest rendition for layout stability
+const responsiveExportNames = ['srcset', 'sizes', 'width', 'height'] as const;
+
+const responsiveLocal = (id: string, name: string) => `${id}__${name}`;
+
+const responsiveSpecifiers = (id: string): LooseNode[] =>
+  responsiveExportNames.map((name) => ({
+    type: 'ImportSpecifier',
+    imported: { type: 'Identifier', name },
+    local: { type: 'Identifier', name: responsiveLocal(id, name) },
+  }));
+
+const identifierAttribute = (name: string, id: string): MdxJsxAttribute => ({
+  type: 'mdxJsxAttribute',
+  name,
+  value: { type: 'mdxJsxAttributeValueExpression', value: id, data: { estree: identifierExpression(id) } },
+});
+
+const responsiveAttributes = (id: string): MdxJsxAttribute[] => [
+  identifierAttribute('srcSet', responsiveLocal(id, 'srcset')),
+  identifierAttribute('sizes', responsiveLocal(id, 'sizes')),
+  identifierAttribute('width', responsiveLocal(id, 'width')),
+  identifierAttribute('height', responsiveLocal(id, 'height')),
+];
+
+// the local name of an `src={x}` expression, when it is a plain identifier
+const expressionIdentifier = (attribute: MdxJsxAttribute): string | undefined => {
+  const value = attribute.value as { data?: { estree?: EstreeProgram } } | string;
+  if (typeof value === 'string') return undefined;
+  const [first, ...rest] = value?.data?.estree?.body ?? [];
+  if (rest.length > 0 || first?.type !== 'ExpressionStatement') return undefined;
+  const expression = (first as LooseNode).expression as LooseNode | undefined;
+  return expression?.type === 'Identifier' ? String(expression.name) : undefined;
+};
 
 const identifierExpression = (id: string): EstreeProgram => ({
   type: 'Program',
@@ -154,32 +199,59 @@ const remarkImages: Plugin<[string], Root> = (filePath) => (tree) => {
 
   // where possible turn a url into an asset import so vite bundles the file,
   // otherwise keep it as a plain url
-  const srcAttribute = (url: string): MdxJsxAttribute => {
+  const srcAttributes = (url: string): MdxJsxAttribute[] => {
     const specifier = toModuleSpecifier(url);
     const id = `__mdxImageAsset${counter++}`;
 
     if (isFile(resolveAsset(specifier))) {
+      const responsive = RESPONSIVE_IMAGE_RE.test(specifier);
       const value = `import ${id} from ${JSON.stringify(specifier)};`;
-      imports.push({ type: 'mdxjsEsm', value, data: { estree: importDeclaration(id, specifier) } });
-      return {
-        type: 'mdxJsxAttribute',
-        name: 'src',
-        value: {
-          type: 'mdxJsxAttributeValueExpression',
-          value: id,
-          data: { estree: identifierExpression(id) },
-        },
-      };
+      imports.push({
+        type: 'mdxjsEsm',
+        value,
+        data: { estree: importDeclaration(id, specifier, responsive) },
+      });
+      return [
+        identifierAttribute('src', id),
+        ...(responsive ? responsiveAttributes(id) : []),
+      ];
     }
 
     console.warn(`\n[mdx] image not found, leaving url as-is: ${url} (in ${filePath})`);
-    return { type: 'mdxJsxAttribute', name: 'src', value: url };
+    return [{ type: 'mdxJsxAttribute', name: 'src', value: url }];
   };
 
-  const srcFor = (url: string): MdxJsxAttribute =>
+  const srcFor = (url: string): MdxJsxAttribute[] =>
     isExternalUrl(url) || isPublicUrl(url)
-      ? { type: 'mdxJsxAttribute', name: 'src', value: url }
-      : srcAttribute(url);
+      ? [{ type: 'mdxJsxAttribute', name: 'src', value: url }]
+      : srcAttributes(url);
+
+  // hand written `import x from './x.png'` declarations: on first use of x in
+  // an <img>, extend the import with the responsive exports of the same module
+  const assetImports = new Map<string, { declaration: LooseNode; extended: boolean }>();
+  for (const child of tree.children as unknown as LooseNode[]) {
+    if (child.type !== 'mdxjsEsm') continue;
+    for (const statement of (child.data?.estree?.body ?? []) as LooseNode[]) {
+      if (statement.type !== 'ImportDeclaration') continue;
+      const source = statement.source?.value;
+      if (typeof source !== 'string' || !RESPONSIVE_IMAGE_RE.test(source)) continue;
+      for (const specifier of (statement.specifiers ?? []) as LooseNode[]) {
+        if (specifier.type === 'ImportDefaultSpecifier') {
+          assetImports.set(String(specifier.local?.name), { declaration: statement, extended: false });
+        }
+      }
+    }
+  }
+
+  const extendImport = (id: string, entry: { declaration: LooseNode; extended: boolean }) => {
+    if (entry.extended) return;
+    entry.extended = true;
+    const specifiers = (entry.declaration.specifiers ?? []) as LooseNode[];
+    const existing = new Set(specifiers.map((specifier) => String(specifier.local?.name)));
+    for (const specifier of responsiveSpecifiers(id)) {
+      if (!existing.has(String(specifier.local?.name))) specifiers.push(specifier);
+    }
+  };
 
   visitParents(tree, (node, ancestors) => {
     const loose = node as unknown as LooseNode;
@@ -195,7 +267,22 @@ const remarkImages: Plugin<[string], Root> = (filePath) => (tree) => {
       );
       const src = index === -1 ? undefined : element.attributes[index];
       if (src && typeof src.value === 'string') {
-        element.attributes[index] = srcFor(src.value);
+        element.attributes.splice(index, 1, ...srcFor(src.value));
+        return;
+      }
+
+      // hand written <img src={x}> where x is an image import: attach the
+      // responsive exports of the same module
+      const id = element.attributes
+        .filter((attribute) => attribute.name === 'src')
+        .map(expressionIdentifier)
+        .find(Boolean);
+      const entry = id ? assetImports.get(id) : undefined;
+      if (id && entry) {
+        extendImport(id, entry);
+        for (const attribute of responsiveAttributes(id)) {
+          if (!hasAttribute(element, attribute.name)) element.attributes.push(attribute);
+        }
       }
       return;
     }
@@ -203,7 +290,7 @@ const remarkImages: Plugin<[string], Root> = (filePath) => (tree) => {
     if (node.type !== 'image') return;
 
     const image = node as unknown as { url: string; alt?: string | null; title?: string | null };
-    const attributes: MdxJsxAttribute[] = [srcFor(image.url)];
+    const attributes: MdxJsxAttribute[] = srcFor(image.url);
 
     attributes.push({ type: 'mdxJsxAttribute', name: 'alt', value: image.alt ?? '' });
     if (image.title)

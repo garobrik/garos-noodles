@@ -48,6 +48,7 @@
     "remark-react": "^9.0.1",
     "remark-rehype": "^11.1.2",
     "subset-font": "^2.9.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.11",
     "typescript": "^7.0.2",

@@ -5,7 +5,7 @@
     "dev": "vike dev",
     "build": "vike build",
     "preview": "vike preview",
-    "lint": "oxlint && npm run lint:images",
+    "lint": "oxlint",
     "lint:images": "node scripts/optimize-images.mjs",
     "check": "tsc",
     "format": "oxfmt --write",
